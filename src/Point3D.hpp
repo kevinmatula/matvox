@@ -10,6 +10,9 @@ public:
     y = y;
     z = z;
   }
+
+  // TODO: add a method to find a vector d that represents the position of a
+  // point with respect to the coordinate system defined by the camera.
 };
 
 #endif
