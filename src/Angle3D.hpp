@@ -4,4 +4,6 @@ struct Angle3D {
   int x;
   int y;
   int z;
+
+  Angle3D(int x, int y, int z) : x(x), y(y), z(z) {};
 };

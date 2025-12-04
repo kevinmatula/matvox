@@ -9,10 +9,7 @@ public:
   int x, y;
 
   // This is our constructor method.
-  Point2D(int x, int y) {
-    x = x;
-    y = y;
-  }
+  Point2D(int x, int y);
 
   // This method will project a 3D point into 2D.
   Point2D Projection2D(Point3D point);

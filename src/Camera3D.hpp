@@ -5,4 +5,6 @@
 struct Camera3D {
   Point3D point;
   Angle3D angle;
+
+  Camera3D(Point3D point, Angle3D angle) : point(point), angle(angle) {};
 };
