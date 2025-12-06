@@ -13,6 +13,9 @@ int main() {
   const int STARTING_FRONT_DEPTH = 10;
   const int STARTING_BACK_DEPTH = STARTING_FRONT_DEPTH + SIDELEN_CUBE;
 
+  const int SCENE_WIDTH = 150;
+  const int SCENE_HEIGHT = 30;
+
   const int CAM_DISTANCE = 40;
 
   // Front side of test cube
@@ -46,7 +49,7 @@ int main() {
   cout << "\x1b[2J\x1b[H";
 
   // Set the cursor to some random point in the terminal
-  cout << "\x1b[5;10H";
+  cout << "\x1b[5;150H";
 
   // Plot a lil thingy
   cout << "*";
