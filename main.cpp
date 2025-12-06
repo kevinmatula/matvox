@@ -40,7 +40,19 @@ int main() {
   Angle3D anglePoint(0, 0, 0);
   Camera3D camera(cameraPoint, anglePoint);
 
-  cout << "\x1b[2J" << endl;
+  // Logic for printing pixels
+
+  // Clear the screen and set cursor to home
+  cout << "\x1b[2J\x1b[H";
+
+  // Set the cursor to some random point in the terminal
+  cout << "\x1b[5;10H";
+
+  // Plot a lil thingy
+  cout << "*";
+
+  // Move cursor to bottom of terminal for space purposes
+  cout << "\x1b[30H";
 
   return 0;
 }
