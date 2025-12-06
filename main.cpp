@@ -40,5 +40,7 @@ int main() {
   Angle3D anglePoint(0, 0, 0);
   Camera3D camera(cameraPoint, anglePoint);
 
+  cout << "\x1b[2J" << endl;
+
   return 0;
 }
