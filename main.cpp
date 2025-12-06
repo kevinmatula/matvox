@@ -1,6 +1,6 @@
-#include "src/Camera3D.hpp"
-#include "src/Point2D.hpp"
-#include "src/Point3D.hpp"
+#include "include/Position/Camera3D.hpp"
+#include "include/Position/Point2D.hpp"
+#include "include/Position/Point3D.hpp"
 #include <iostream>
 #include <stdio.h>
 
@@ -42,6 +42,9 @@ int main() {
   Point3D cameraPoint(0, 0, 0);
   Angle3D anglePoint(0, 0, 0);
   Camera3D camera(cameraPoint, anglePoint);
+
+  // E value (the plane we are projecting onto)
+  Point3D displaySurface(0, 0, CAM_DISTANCE);
 
   // Logic for printing pixels
 

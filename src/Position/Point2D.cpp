@@ -1,4 +1,4 @@
-#include "Point2D.hpp"
+#include "../../include/Position/Point2D.hpp"
 
 // This is our constructor implementation.
 Point2D::Point2D(int x, int y) : x(x), y(y) {}
