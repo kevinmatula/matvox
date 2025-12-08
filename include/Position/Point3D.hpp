@@ -14,7 +14,7 @@ public:
   // point with respect to the coordinate system defined by the camera.
   // NOTE: so far, we have completed a - c portion, now we just need to multiply
   // by rotation matrix.
-  Point3D cameraTransformation(Point3D originalPoint, Camera3D camera);
+  Point3D cameraTransformation(Camera3D camera);
 };
 
 #endif
