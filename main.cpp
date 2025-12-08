@@ -14,10 +14,10 @@ int main() {
   const int STARTING_FRONT_DEPTH = 10;
   const int STARTING_BACK_DEPTH = STARTING_FRONT_DEPTH + SIDELEN_CUBE;
 
-  const int SCENE_WIDTH = 150;
+  const int SCENE_WIDTH = 100;
   const int SCENE_HEIGHT = 30;
 
-  const int CAM_DISTANCE = 15;
+  const int CAM_DISTANCE = 10;
 
   // Front side of test cube
   Point3D frontTopRightCorner3D(HALF_SIDELEN_CUBE, HALF_SIDELEN_CUBE,
@@ -76,8 +76,7 @@ int main() {
   cout << "\x1b[2J\x1b[H";
 
   for (int i = 0; i < cubePoints.size(); i++) {
-    // We can try to convert these points to terminal-friendly points. We just
-    // add back the differences!
+    // We can try to convert these points to terminal-friendly points.
     int screenX = cubePoints[i].x + SCENE_WIDTH / 2;
     int screenY = SCENE_HEIGHT / 2 - cubePoints[i].y;
 
