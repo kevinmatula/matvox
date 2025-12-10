@@ -11,11 +11,11 @@ int main() {
 
   const int SIDELEN_CUBE = 20;
   const int HALF_SIDELEN_CUBE = SIDELEN_CUBE / 2;
-  const int STARTING_FRONT_DEPTH = 10;
+  const int STARTING_FRONT_DEPTH = 40;
   const int STARTING_BACK_DEPTH = STARTING_FRONT_DEPTH + SIDELEN_CUBE;
 
-  const int SCENE_WIDTH = 100;
-  const int SCENE_HEIGHT = 30;
+  const int SCENE_WIDTH = 115;
+  const int SCENE_HEIGHT = 35;
 
   const int CAM_DISTANCE = 10;
 
@@ -81,14 +81,17 @@ int main() {
     int screenY = SCENE_HEIGHT / 2 - cubePoints[i].y;
 
     // Printing logic
-    cout << "\x1b[" << screenY << ";" << screenX << "H";
-    // Plot a lil thingy
-    cout << "*";
-    cubePointsTest.push_back(Point2D(screenX, screenY));
+    if (screenX < SCENE_WIDTH && screenX > 0 && screenY < SCENE_HEIGHT &&
+        screenY > 0) {
+      cout << "\x1b[" << screenY << ";" << screenX << "H";
+      // Plot a lil thingy
+      cout << ".";
+      cubePointsTest.push_back(Point2D(screenX, screenY));
+    }
   }
 
   // Move cursor to bottom of terminal for space purposes
-  cout << "\x1b[30H";
+  cout << "\x1b[" << SCENE_HEIGHT << "H";
 
   for (int i = 0; i < cubePointsTest.size(); i++) {
     cout << "X: " << cubePointsTest[i].x << endl;

@@ -1,14 +1,14 @@
 #ifndef ANGLE3D_HPP
 #define ANGLE3D_HPP
 
-// This struct represents an angle in our scene.
+// This struct represents an angle in our scene. All fields of an angle are
+// represented in degrees.
 struct Angle3D {
-  // Maybe this should be represented with doubles?
-  int x;
-  int y;
-  int z;
+  double x;
+  double y;
+  double z;
 
-  Angle3D(int x, int y, int z) : x(x), y(y), z(z) {};
+  Angle3D(double x, double y, double z) : x(x), y(y), z(z) {};
 };
 
 #endif

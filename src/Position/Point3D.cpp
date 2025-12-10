@@ -11,26 +11,25 @@ Point3D Point3D::cameraTransformation(Camera3D camera) {
   Point3D subtractionAlignment((x - camera.point.x), (y - camera.point.y),
                                (z - camera.point.z));
 
+  double cameraRadX = camera.angle.x * (M_PI / 180.0);
+  double cameraRadY = camera.angle.y * (M_PI / 180.0);
+  double cameraRadZ = camera.angle.z * (M_PI / 180.0);
+
   // This represents the original point A rotated according to the angle of the
   // camera.
   std::vector<std::vector<double>> angleMatrix = {
-      {std::cos(camera.angle.y) * std::cos(camera.angle.z),
-       std::cos(camera.angle.y) * std::sin(camera.angle.z),
-       -1 * std::sin(camera.angle.y)},
-      {(std::sin(camera.angle.x) * std::sin(camera.angle.y) *
-        std::cos(camera.angle.z)) -
-           (std::cos(camera.angle.x) * std::sin(camera.angle.z)),
-       (std::sin(camera.angle.x) * std::sin(camera.angle.y) *
-        std::sin(camera.angle.z)) +
-           (std::cos(camera.angle.x) * std::cos(camera.angle.z)),
-       std::sin(camera.angle.x) * std::cos(camera.angle.y)},
-      {(std::cos(camera.angle.x) * std::sin(camera.angle.y) *
-        std::cos(camera.angle.z)) +
-           (std::sin(camera.angle.x) * std::sin(camera.angle.z)),
-       (std::cos(camera.angle.x) * std::sin(camera.angle.y) *
-        std::sin(camera.angle.z)) -
-           (std::sin(camera.angle.x) * std::cos(camera.angle.z)),
-       std::cos(camera.angle.x) * std::cos(camera.angle.y)}};
+      {std::cos(cameraRadY) * std::cos(cameraRadZ),
+       std::cos(cameraRadY) * std::sin(cameraRadZ), -1 * std::sin(cameraRadY)},
+      {(std::sin(cameraRadX) * std::sin(cameraRadY) * std::cos(cameraRadZ)) -
+           (std::cos(cameraRadX) * std::sin(cameraRadZ)),
+       (std::sin(cameraRadX) * std::sin(cameraRadY) * std::sin(cameraRadZ)) +
+           (std::cos(cameraRadX) * std::cos(cameraRadZ)),
+       std::sin(cameraRadX) * std::cos(cameraRadY)},
+      {(std::cos(cameraRadX) * std::sin(cameraRadY) * std::cos(cameraRadZ)) +
+           (std::sin(cameraRadX) * std::sin(cameraRadZ)),
+       (std::cos(cameraRadX) * std::sin(cameraRadY) * std::sin(cameraRadZ)) -
+           (std::sin(cameraRadX) * std::cos(cameraRadZ)),
+       std::cos(cameraRadX) * std::cos(cameraRadY)}};
 
   // This represents the matrix times the vector, to get a full vector
   // representing the transformation.
