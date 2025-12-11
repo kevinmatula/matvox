@@ -60,7 +60,7 @@ int main() {
 
     // Camera Point (Pinhole)
     Point3D cameraPoint(0, 0, 0);
-    Angle3D anglePoint(0, 0, 0);
+    Angle3D anglePoint(count, 0, 0);
     Camera3D camera(cameraPoint, anglePoint);
 
     // E value (the plane we are projecting onto)

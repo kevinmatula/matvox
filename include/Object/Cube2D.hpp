@@ -4,6 +4,7 @@
 #include "../Object/Cube.hpp"
 #include "../Position/Point2D.hpp"
 #include "Cube3D.hpp"
+#include <vector>
 
 // This is our class representation for a 2D cube.
 class Cube2D : public Cube {
