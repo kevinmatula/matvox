@@ -5,7 +5,7 @@
 #include "include/Position/Point3D.hpp"
 #include <iostream>
 #include <memory>
-#include <stdio.h>
+#include <unistd.h>
 #include <vector>
 
 using namespace std;
@@ -42,50 +42,67 @@ int main() {
   Point3D backBottomRightCorner3D(HALF_SIDELEN_CUBE, -HALF_SIDELEN_CUBE,
                                   STARTING_BACK_DEPTH);
 
-  // Camera Point (Pinhole)
-  Point3D cameraPoint(0, 0, 0);
-  Angle3D anglePoint(0, 0, 0);
-  Camera3D camera(cameraPoint, anglePoint);
-
-  // E value (the plane we are projecting onto)
-  Point3D displaySurface(0, 0, CAM_DISTANCE);
-
   // Cube Initialization
   unique_ptr<Cube3D> cubeXYZ = make_unique<Cube3D>(
       frontTopRightCorner3D, frontTopLeftCorner3D, frontBottomRightCorner3D,
       frontBottomLeftCorner3D, backTopRightCorner3D, backTopLeftCorner3D,
       backBottomRightCorner3D, backBottomLeftCorner3D, STARTING_FRONT_DEPTH);
 
-  unique_ptr<Cube2D> cubeXY =
-      make_unique<Cube2D>(*cubeXYZ, displaySurface, camera);
-
   vector<Point2D> cubePointsTest;
 
+  int count = 0;
+
   // Clear the screen and set cursor to home
-  cout << "\x1b[2J\x1b[H";
+  cout << "\x1b[?1049h\x1b[?25l" << flush;
+  while (1) {
 
-  for (int i = 0; i < cubeXY->points.size(); i++) {
-    // We can try to convert these points to terminal-friendly points.
-    int screenX = cubeXY->points[i].x + SCENE_WIDTH / 2;
-    int screenY = SCENE_HEIGHT / 2 - cubeXY->points[i].y;
+    vector<vector<char>> buffer(SCENE_HEIGHT, vector<char>(SCENE_WIDTH, ' '));
 
-    // Printing logic
-    if (screenX < SCENE_WIDTH && screenX > 0 && screenY < SCENE_HEIGHT &&
-        screenY > 0) {
-      cout << "\x1b[" << screenY << ";" << screenX << "H";
-      // Plot a lil thingy
-      cout << ".";
-      cubePointsTest.push_back(Point2D(screenX, screenY));
+    // Camera Point (Pinhole)
+    Point3D cameraPoint(0, 0, 0);
+    Angle3D anglePoint(0, 0, 0);
+    Camera3D camera(cameraPoint, anglePoint);
+
+    // E value (the plane we are projecting onto)
+    Point3D displaySurface(0, 0, CAM_DISTANCE);
+
+    // 2D cube initialization
+    unique_ptr<Cube2D> cubeXY =
+        make_unique<Cube2D>(*cubeXYZ, displaySurface, camera);
+
+    for (int i = 0; i < cubeXY->points.size(); i++) {
+      // We can try to convert these points to terminal-friendly points.
+      int screenX = cubeXY->points[i].x + SCENE_WIDTH / 2;
+      int screenY = SCENE_HEIGHT / 2 - cubeXY->points[i].y;
+
+      // Printing logic
+      if (screenX < SCENE_WIDTH && screenX > 0 && screenY < SCENE_HEIGHT &&
+          screenY > 0) {
+        buffer[screenY][screenX] = '.';
+        cubePointsTest.push_back(Point2D(screenX, screenY));
+      }
     }
+
+    cout << "\x1b[2J\x1b[H";
+    for (int y = 0; y < SCENE_HEIGHT; y++) {
+      for (int x = 0; x < SCENE_WIDTH; x++) {
+        cout << buffer[y][x];
+      }
+      cout << "\n";
+    }
+    cout << flush;
+    usleep(10000);
+    count++;
   }
 
   // Move cursor to bottom of terminal for space purposes
-  cout << "\x1b[" << SCENE_HEIGHT << "H";
+  cout << "\x1b[" << SCENE_HEIGHT + 1 << "H";
+  cout << "\x1b[?25h" << flush;
 
-  for (int i = 0; i < cubePointsTest.size(); i++) {
-    cout << "X: " << cubePointsTest[i].x << endl;
-    cout << "Y: " << cubePointsTest[i].y << endl;
-  }
+  // for (int i = 0; i < cubePointsTest.size(); i++) {
+  //   cout << "X: " << cubePointsTest[i].x << endl;
+  //   cout << "Y: " << cubePointsTest[i].y << endl;
+  // }
 
   return 0;
 }
