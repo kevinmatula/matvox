@@ -5,17 +5,17 @@ struct Camera3D;
 
 class Point3D {
 public:
-  int x, y, z;
+  double x, y, z;
 
   // This is our constructor.
-  Point3D(int x, int y, int z);
+  Point3D(double x, double y, double z);
 
   // TODO: add a method to find a vector d that represents the position of a
   // point with respect to the coordinate system defined by the camera.
   // NOTE: so far, we have completed a - c portion, now we just need to multiply
   // by rotation matrix.
   // Consider pre-computing for optimization.
-  Point3D cameraTransformation(Camera3D camera);
+  Point3D cameraTransformation(Camera3D camera) const;
 };
 
 #endif

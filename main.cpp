@@ -1,7 +1,10 @@
+#include "include/Object/Cube2D.hpp"
+#include "include/Object/Cube3D.hpp"
 #include "include/Position/Camera3D.hpp"
 #include "include/Position/Point2D.hpp"
 #include "include/Position/Point3D.hpp"
 #include <iostream>
+#include <memory>
 #include <stdio.h>
 #include <vector>
 
@@ -47,38 +50,24 @@ int main() {
   // E value (the plane we are projecting onto)
   Point3D displaySurface(0, 0, CAM_DISTANCE);
 
-  // 3D TESTING:
-  Point2D frontTopRightCorner2D(
-      frontTopRightCorner3D.cameraTransformation(camera), displaySurface);
-  Point2D frontTopLeftCorner2D(
-      frontTopLeftCorner3D.cameraTransformation(camera), displaySurface);
-  Point2D frontBottomRightCorner2D(
-      frontBottomRightCorner3D.cameraTransformation(camera), displaySurface);
-  Point2D frontBottomLeftCorner2D(
-      frontBottomLeftCorner3D.cameraTransformation(camera), displaySurface);
+  // Cube Initialization
+  unique_ptr<Cube3D> cubeXYZ = make_unique<Cube3D>(
+      frontTopRightCorner3D, frontTopLeftCorner3D, frontBottomRightCorner3D,
+      frontBottomLeftCorner3D, backTopRightCorner3D, backTopLeftCorner3D,
+      backBottomRightCorner3D, backBottomLeftCorner3D, STARTING_FRONT_DEPTH);
 
-  Point2D backTopRightCorner2D(
-      backTopRightCorner3D.cameraTransformation(camera), displaySurface);
-  Point2D backTopLeftCorner2D(backTopLeftCorner3D.cameraTransformation(camera),
-                              displaySurface);
-  Point2D backBottomRightCorner2D(
-      backBottomRightCorner3D.cameraTransformation(camera), displaySurface);
-  Point2D backBottomLeftCorner2D(
-      backBottomLeftCorner3D.cameraTransformation(camera), displaySurface);
+  unique_ptr<Cube2D> cubeXY =
+      make_unique<Cube2D>(*cubeXYZ, displaySurface, camera);
 
-  vector<Point2D> cubePoints = {
-      frontBottomLeftCorner2D,  frontTopLeftCorner2D,   frontTopRightCorner2D,
-      frontBottomRightCorner2D, backBottomLeftCorner2D, backBottomRightCorner2D,
-      backTopLeftCorner2D,      backTopRightCorner2D};
   vector<Point2D> cubePointsTest;
 
   // Clear the screen and set cursor to home
   cout << "\x1b[2J\x1b[H";
 
-  for (int i = 0; i < cubePoints.size(); i++) {
+  for (int i = 0; i < cubeXY->points.size(); i++) {
     // We can try to convert these points to terminal-friendly points.
-    int screenX = cubePoints[i].x + SCENE_WIDTH / 2;
-    int screenY = SCENE_HEIGHT / 2 - cubePoints[i].y;
+    int screenX = cubeXY->points[i].x + SCENE_WIDTH / 2;
+    int screenY = SCENE_HEIGHT / 2 - cubeXY->points[i].y;
 
     // Printing logic
     if (screenX < SCENE_WIDTH && screenX > 0 && screenY < SCENE_HEIGHT &&

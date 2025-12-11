@@ -3,9 +3,9 @@
 #include <math.h>
 #include <vector>
 
-Point3D::Point3D(int x, int y, int z) : x(x), y(y), z(z) {}
+Point3D::Point3D(double x, double y, double z) : x(x), y(y), z(z) {}
 
-Point3D Point3D::cameraTransformation(Camera3D camera) {
+Point3D Point3D::cameraTransformation(Camera3D camera) const {
   // This represents the original point A subtracted by the 3D position
   // representing the camera.
   Point3D subtractionAlignment((x - camera.point.x), (y - camera.point.y),
