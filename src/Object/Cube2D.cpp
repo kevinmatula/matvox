@@ -3,6 +3,7 @@
 #include "../../include/Position/Camera3D.hpp"
 #include "../../include/Position/Point2D.hpp"
 
+// Constructs a cube using given points
 Cube2D::Cube2D(Point2D frontTRg, Point2D frontTLg, Point2D frontBRg,
                Point2D frontBLg, Point2D backTRg, Point2D backTLg,
                Point2D backBRg, Point2D backBLg, int startingFrontDepth)
@@ -13,6 +14,7 @@ Cube2D::Cube2D(Point2D frontTRg, Point2D frontTLg, Point2D frontBRg,
       points.push_back(backBRg), points.push_back(backBLg);
 }
 
+// Constructs a cube using a given 3D cube and does computation
 Cube2D::Cube2D(Cube3D cube3D, Point3D displaySurface, Camera3D camera)
     : Cube(cube3D.STARTING_FRONT_DEPTH) {
   for (int i = 0; i < cube3D.points.size(); i++) {

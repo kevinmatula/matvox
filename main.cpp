@@ -5,20 +5,48 @@
 #include "include/Position/Point3D.hpp"
 #include <iostream>
 #include <memory>
+#include <signal.h>
 #include <unistd.h>
 #include <vector>
 
 using namespace std;
 
+// cool-ass cleanup function that stops CPU mid instruction to run this command.
+void cleanup(int) {
+  cout << "\x1b[?1049l\x1b[?25h" << flush;
+  cout << "Matvox Was Closed." << endl;
+  _exit(0);
+}
+
+// This function takes the entire buffer and turns it into a string
+// This functions reduces flicker by rendering entire string at once and then
+// outputting that!
+string renderScreen(vector<vector<char>> buf, int SCENE_WIDTH,
+                    int SCENE_HEIGHT) {
+  string screen = "";
+  for (int y = 0; y < SCENE_HEIGHT; y++) {
+    for (int x = 0; x < SCENE_WIDTH; x++) {
+      screen += buf[y][x];
+    }
+    if (y < SCENE_HEIGHT - 1) {
+      screen += "\n";
+    }
+  }
+  return screen;
+}
+
 int main() {
 
-  const int SIDELEN_CUBE = 20;
+  signal(SIGINT, cleanup);
+  signal(SIGTERM, cleanup);
+
+  const int SIDELEN_CUBE = 10;
   const int HALF_SIDELEN_CUBE = SIDELEN_CUBE / 2;
   const int STARTING_FRONT_DEPTH = 40;
   const int STARTING_BACK_DEPTH = STARTING_FRONT_DEPTH + SIDELEN_CUBE;
 
-  const int SCENE_WIDTH = 115;
-  const int SCENE_HEIGHT = 35;
+  const int SCENE_WIDTH = 80;
+  const int SCENE_HEIGHT = 25;
 
   const int CAM_DISTANCE = 10;
 
@@ -48,19 +76,29 @@ int main() {
       frontBottomLeftCorner3D, backTopRightCorner3D, backTopLeftCorner3D,
       backBottomRightCorner3D, backBottomLeftCorner3D, STARTING_FRONT_DEPTH);
 
-  vector<Point2D> cubePointsTest;
+  vector<Point3D> cubePoints;
+
+  // For-Loop to initialize entire cube structure
+  for (int x = -HALF_SIDELEN_CUBE; x <= HALF_SIDELEN_CUBE; x++) {
+    for (int y = -HALF_SIDELEN_CUBE; y <= HALF_SIDELEN_CUBE; y++) {
+      for (int z = STARTING_FRONT_DEPTH; z <= STARTING_BACK_DEPTH; z++) {
+        cubePoints.push_back(Point3D(x, y, z));
+      }
+    }
+  }
 
   int count = 0;
 
   // Clear the screen and set cursor to home
   cout << "\x1b[?1049h\x1b[?25l" << flush;
+
   while (1) {
 
     vector<vector<char>> buffer(SCENE_HEIGHT, vector<char>(SCENE_WIDTH, ' '));
 
     // Camera Point (Pinhole)
-    Point3D cameraPoint(0, 0, 0);
-    Angle3D anglePoint(count, 0, 0);
+    Point3D cameraPoint(count, 0, 0);
+    Angle3D anglePoint(0, 0, 0);
     Camera3D camera(cameraPoint, anglePoint);
 
     // E value (the plane we are projecting onto)
@@ -78,31 +116,19 @@ int main() {
       // Printing logic
       if (screenX < SCENE_WIDTH && screenX > 0 && screenY < SCENE_HEIGHT &&
           screenY > 0) {
-        buffer[screenY][screenX] = '.';
-        cubePointsTest.push_back(Point2D(screenX, screenY));
+        buffer[screenY][screenX] = '#';
       }
     }
 
-    cout << "\x1b[2J\x1b[H";
-    for (int y = 0; y < SCENE_HEIGHT; y++) {
-      for (int x = 0; x < SCENE_WIDTH; x++) {
-        cout << buffer[y][x];
-      }
-      cout << "\n";
-    }
+    cout << "\x1b[H";
+    cout << renderScreen(buffer, SCENE_WIDTH, SCENE_HEIGHT);
+
     cout << flush;
+
     usleep(10000);
+
     count++;
   }
-
-  // Move cursor to bottom of terminal for space purposes
-  cout << "\x1b[" << SCENE_HEIGHT + 1 << "H";
-  cout << "\x1b[?25h" << flush;
-
-  // for (int i = 0; i < cubePointsTest.size(); i++) {
-  //   cout << "X: " << cubePointsTest[i].x << endl;
-  //   cout << "Y: " << cubePointsTest[i].y << endl;
-  // }
 
   return 0;
 }
