@@ -83,6 +83,8 @@ int main() {
     for (int y = -HALF_SIDELEN_CUBE; y <= HALF_SIDELEN_CUBE; y++) {
       for (int z = STARTING_FRONT_DEPTH; z <= STARTING_BACK_DEPTH; z++) {
         cubePoints.push_back(Point3D(x, y, z));
+        // TODO: Change Cube3D and Cube2D definitions to support vector of
+        // points as opposed to exclusively corner points
       }
     }
   }
