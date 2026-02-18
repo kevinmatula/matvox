@@ -5,5 +5,5 @@ matvox is an efficient, terminal-based voxel engine. All graphics are rendered w
 - matvox allows users to roam freely.
 - matvox comes out of the box with various performance optimizations, such as face culling.
 
-## Design
+## 🤯 Design
 - Why did I make this object oriented
