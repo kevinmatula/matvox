@@ -1,7 +1,7 @@
 > An entire world inside of your terminal.
 
-# ⬡ matvox
-matvox is an efficient, terminal-based voxel engine. All graphics are rendered with ASCII characters on the CPU.
+# ⬡ Matvox
+Matvox is an efficient, terminal-based voxel engine. All graphics are rendered with ASCII characters on the CPU.
 
 ## ⛏ Features
 - 🎮 **Free movement**: Allows users to roam freely around a space with their keyboard and mouse.
