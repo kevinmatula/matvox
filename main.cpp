@@ -40,54 +40,48 @@ int main() {
   signal(SIGINT, cleanup);
   signal(SIGTERM, cleanup);
 
-  const int SIDELEN_CUBE = 10;
+  const int SIDELEN_CUBE = 30;
   const int HALF_SIDELEN_CUBE = SIDELEN_CUBE / 2;
   const int STARTING_FRONT_DEPTH = 40;
   const int STARTING_BACK_DEPTH = STARTING_FRONT_DEPTH + SIDELEN_CUBE;
 
-  const int SCENE_WIDTH = 80;
-  const int SCENE_HEIGHT = 25;
+  const int SCENE_WIDTH = 110;
+  const int SCENE_HEIGHT = 40;
 
   const int CAM_DISTANCE = 10;
 
-  // Front side of test cube
-  Point3D frontTopRightCorner3D(HALF_SIDELEN_CUBE, HALF_SIDELEN_CUBE,
-                                STARTING_FRONT_DEPTH);
-  Point3D frontTopLeftCorner3D(-HALF_SIDELEN_CUBE, HALF_SIDELEN_CUBE,
-                               STARTING_FRONT_DEPTH);
-  Point3D frontBottomLeftCorner3D(-HALF_SIDELEN_CUBE, -HALF_SIDELEN_CUBE,
-                                  STARTING_FRONT_DEPTH);
-  Point3D frontBottomRightCorner3D(HALF_SIDELEN_CUBE, -HALF_SIDELEN_CUBE,
-                                   STARTING_FRONT_DEPTH);
-
-  // Back side of test cube
-  Point3D backTopRightCorner3D(HALF_SIDELEN_CUBE, HALF_SIDELEN_CUBE,
-                               STARTING_BACK_DEPTH);
-  Point3D backTopLeftCorner3D(-HALF_SIDELEN_CUBE, HALF_SIDELEN_CUBE,
-                              STARTING_BACK_DEPTH);
-  Point3D backBottomLeftCorner3D(-HALF_SIDELEN_CUBE, -HALF_SIDELEN_CUBE,
-                                 STARTING_BACK_DEPTH);
-  Point3D backBottomRightCorner3D(HALF_SIDELEN_CUBE, -HALF_SIDELEN_CUBE,
-                                  STARTING_BACK_DEPTH);
-
-  // Cube Initialization
-  unique_ptr<Cube3D> cubeXYZ = make_unique<Cube3D>(
-      frontTopRightCorner3D, frontTopLeftCorner3D, frontBottomRightCorner3D,
-      frontBottomLeftCorner3D, backTopRightCorner3D, backTopLeftCorner3D,
-      backBottomRightCorner3D, backBottomLeftCorner3D, STARTING_FRONT_DEPTH);
-
   vector<Point3D> cubePoints;
 
-  // For-Loop to initialize entire cube structure
+  // Initial Idea of for-Loop to initialize front and back face of cube
+  // structure
   for (int x = -HALF_SIDELEN_CUBE; x <= HALF_SIDELEN_CUBE; x++) {
     for (int y = -HALF_SIDELEN_CUBE; y <= HALF_SIDELEN_CUBE; y++) {
-      for (int z = STARTING_FRONT_DEPTH; z <= STARTING_BACK_DEPTH; z++) {
-        cubePoints.push_back(Point3D(x, y, z));
-        // TODO: Change Cube3D and Cube2D definitions to support vector of
-        // points as opposed to exclusively corner points
-      }
+      cubePoints.push_back(Point3D(x, y, STARTING_FRONT_DEPTH));
+      cubePoints.push_back(Point3D(x, y, STARTING_BACK_DEPTH));
     }
   }
+
+  // Initial Idea of for-Loop to initialize left and right face of cube
+  // structure
+  for (int y = -HALF_SIDELEN_CUBE; y <= HALF_SIDELEN_CUBE; y++) {
+    for (int z = STARTING_FRONT_DEPTH; z <= STARTING_BACK_DEPTH; z++) {
+      cubePoints.push_back(Point3D(-HALF_SIDELEN_CUBE, y, z));
+      cubePoints.push_back(Point3D(HALF_SIDELEN_CUBE, y, z));
+    }
+  }
+
+  // Initial Idea of for-Loop to initialize top and bottom face of cube
+  // structure
+  for (int x = -HALF_SIDELEN_CUBE; x <= HALF_SIDELEN_CUBE; x++) {
+    for (int z = STARTING_FRONT_DEPTH; z <= STARTING_BACK_DEPTH; z++) {
+      cubePoints.push_back(Point3D(x, -HALF_SIDELEN_CUBE, z));
+      cubePoints.push_back(Point3D(x, HALF_SIDELEN_CUBE, z));
+    }
+  }
+
+  // Cube Initialization
+  unique_ptr<Cube3D> cubeXYZ =
+      make_unique<Cube3D>(cubePoints, STARTING_FRONT_DEPTH);
 
   int count = 0;
 
@@ -99,7 +93,7 @@ int main() {
     vector<vector<char>> buffer(SCENE_HEIGHT, vector<char>(SCENE_WIDTH, ' '));
 
     // Camera Point (Pinhole)
-    Point3D cameraPoint(count, 0, 0);
+    Point3D cameraPoint(30, 20, 0);
     Angle3D anglePoint(0, 0, 0);
     Camera3D camera(cameraPoint, anglePoint);
 
@@ -111,14 +105,14 @@ int main() {
         make_unique<Cube2D>(*cubeXYZ, displaySurface, camera);
 
     for (int i = 0; i < cubeXY->points.size(); i++) {
-      // We can try to convert these points to terminal-friendly points.
+      // Convert these points to terminal-friendly points.
       int screenX = cubeXY->points[i].x + SCENE_WIDTH / 2;
       int screenY = SCENE_HEIGHT / 2 - cubeXY->points[i].y;
 
       // Printing logic
       if (screenX < SCENE_WIDTH && screenX > 0 && screenY < SCENE_HEIGHT &&
           screenY > 0) {
-        buffer[screenY][screenX] = '#';
+        buffer[screenY][screenX] = '@';
       }
     }
 
