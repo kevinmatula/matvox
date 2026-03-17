@@ -6,14 +6,34 @@
 #include <iostream>
 #include <memory>
 #include <signal.h>
+#include <termios.h>
 #include <unistd.h>
 #include <vector>
 
 using namespace std;
 
+// Function to hide keystrokes when giving input via cin
+void HideStdinKeystrokes() {
+  termios tty;
+  tcgetattr(STDIN_FILENO, &tty);
+  tty.c_lflag &= ~(ECHO | ICANON); // turn off echo, turn off line buffering
+  tty.c_cc[VMIN] = 0;
+  tty.c_cc[VTIME] = 0;
+  tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+}
+
+// Function to show keystrokes when giving input via cin
+void ShowStdinKeystrokes() {
+  termios tty;
+  tcgetattr(STDIN_FILENO, &tty);
+  tty.c_lflag |= (ECHO | ICANON);
+  tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+}
+
 // cool-ass cleanup function that stops CPU mid instruction to run this command.
 void cleanup(int) {
   cout << "\x1b[?1049l\x1b[?25h" << flush;
+  ShowStdinKeystrokes();
   cout << "Matvox Was Closed." << endl;
   _exit(0);
 }
@@ -84,16 +104,31 @@ int main() {
       make_unique<Cube3D>(cubePoints, STARTING_FRONT_DEPTH);
 
   int count = 0;
+  int x, y, z = 0;
 
   // Clear the screen and set cursor to home
   cout << "\x1b[?1049h\x1b[?25l" << flush;
+
+  HideStdinKeystrokes();
 
   while (1) {
 
     vector<vector<char>> buffer(SCENE_HEIGHT, vector<char>(SCENE_WIDTH, ' '));
 
+    char c = '\0';
+    if (read(STDIN_FILENO, &c, 1) > 0) {
+      if (c == 'w')
+        z++;
+      else if (c == 'a')
+        x--;
+      else if (c == 'd')
+        x++;
+      else if (c == 's')
+        z--;
+    }
+
     // Camera Point (Pinhole)
-    Point3D cameraPoint(30, 20, 0);
+    Point3D cameraPoint(x, y, z);
     Angle3D anglePoint(0, 0, 0);
     Camera3D camera(cameraPoint, anglePoint);
 
@@ -112,7 +147,7 @@ int main() {
       // Printing logic
       if (screenX < SCENE_WIDTH && screenX > 0 && screenY < SCENE_HEIGHT &&
           screenY > 0) {
-        buffer[screenY][screenX] = '@';
+        buffer[screenY][screenX] = '.';
       }
     }
 
