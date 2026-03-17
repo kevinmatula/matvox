@@ -41,7 +41,7 @@ void cleanup(int) {
 // This function takes the entire buffer and turns it into a string
 // This functions reduces flicker by rendering entire string at once and then
 // outputting that!
-string renderScreen(vector<vector<char>> buf, int SCENE_WIDTH,
+string renderScreen(vector<vector<char>> &buf, int SCENE_WIDTH,
                     int SCENE_HEIGHT) {
   string screen = "";
   for (int y = 0; y < SCENE_HEIGHT; y++) {
@@ -72,6 +72,8 @@ int main() {
 
   vector<Point3D> cubePoints;
 
+  // TODO: Add another field, side, to cubePoints so we can hardcode an ANSI
+  // color for that side. We will no longer use shading to avoid confusion.
   // Initial Idea of for-Loop to initialize front and back face of cube
   // structure
   for (int x = -HALF_SIDELEN_CUBE; x <= HALF_SIDELEN_CUBE; x++) {
@@ -104,7 +106,7 @@ int main() {
       make_unique<Cube3D>(cubePoints, STARTING_FRONT_DEPTH);
 
   int count = 0;
-  int x, y, z = 0;
+  int x = 0, y = 0, z = 0;
 
   // Clear the screen and set cursor to home
   cout << "\x1b[?1049h\x1b[?25l" << flush;
