@@ -60,7 +60,7 @@ int main() {
   signal(SIGINT, cleanup);
   signal(SIGTERM, cleanup);
 
-  const int SIDELEN_CUBE = 30;
+  const int SIDELEN_CUBE = 40;
   const int HALF_SIDELEN_CUBE = SIDELEN_CUBE / 2;
   const int STARTING_FRONT_DEPTH = 40;
   const int STARTING_BACK_DEPTH = STARTING_FRONT_DEPTH + SIDELEN_CUBE;
@@ -118,15 +118,16 @@ int main() {
     vector<vector<char>> buffer(SCENE_HEIGHT, vector<char>(SCENE_WIDTH, ' '));
 
     char c = '\0';
+    // TODO: Make the 1s here an actual value that is important to the engine
     if (read(STDIN_FILENO, &c, 1) > 0) {
       if (c == 'w')
-        z++;
+        z += 1;
       else if (c == 'a')
-        x--;
+        x -= 1;
       else if (c == 'd')
-        x++;
+        x += 1;
       else if (c == 's')
-        z--;
+        z -= 1;
     }
 
     // Camera Point (Pinhole)
