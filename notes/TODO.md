@@ -26,3 +26,5 @@ Here are a few features that should be added in order to polish the engine:
 - Allow users to look around with either their mouse or using the arrow keys, this will change their viewing angle.
 - Explore procedurally generated "maps"
 - Implement functionality for a single file to render an entire map.
+- FIX: Bug where some random lines of cube aren't drawn
+- FIX: Cube so it is more cubish and less rectangular
